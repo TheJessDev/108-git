@@ -24,6 +24,7 @@ print(name + ":" + str(age))  # cannot add string + integer; use str()
 print(f"Wake up") 
 
 # or
+#print(f"{name}": {age})
 print(f"{name}": {age})
 
 # also

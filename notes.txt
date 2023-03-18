@@ -10,3 +10,25 @@ mac: source venv/bin/activate
 deactivate to exit
 
 # remember VSCode from back end
+
+---- New Project -----
+# initialize the Repo ( 1 time)
+git init
+
+# create local snapshot
+git add .  
+git commit -m "Some file"
+
+#set up the  remote url ( 1 time )
+git remote add origin <URL>
+
+# upload to server
+git push -u origin main
+
+
+----- Subsequent push ------
+
+git add .
+git commit -m  "Something"
+
+git push
