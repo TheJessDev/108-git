@@ -33,3 +33,6 @@ git add .
 git commit -m  "Something"
 
 git push
+
+# testing end points
+Thunderclient extension

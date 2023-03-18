@@ -25,7 +25,7 @@ print(f"Wake up")
 
 # or
 #print(f"{name}": {age})
-print(f"{name}": {age})
+print(f"{name}": {age}) 
 
 # also
 print(f"   {age} - ., {name}") # three spaces, - ., ,

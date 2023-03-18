@@ -1,6 +1,7 @@
 from flask import Flask
 import json
 from about import me
+from data import mock_data
 
 app = Flask(__name__) # create an instance of Flask class
 
@@ -27,11 +28,40 @@ def version():
 def about():
     return json.dumps(me)
 
+############
+
+@app.get("/api/catalog") # <---new url for display**
+def get_data():
+    return json.dumps(mock_data)
+# product = dictionary (object)
+
+@app.get("/api/product/count")
+def product_count():
+    count = len(mock_data)
+    return json.dumps(count) 
+
+
+@app.get("/api/about/dev_info")
+def dev_info():
+    name = me["name"]
+    last_name = me["last_name"]
+    email = me["email"]
+    response = f"{name} {last_name} -- {email}"
+    return json.dumps(response)
+# or
+#  # return json.dumps(f"{me["name"]} {me["last_name"]} -- {me["email"]}")
+
+
+
+
+
+
+
+    
+
+
 
 # start the server
-app.run(debug=True)
-
-
 app.run(debug=True)
 
 # this is a change
