@@ -1,0 +1,5 @@
+# things not to push
+
+venv/
+__pycache__/
+
