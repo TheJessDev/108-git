@@ -7,10 +7,25 @@ win: venv\Scripts\activate
 
 mac: source venv/bin/activate
 
-deactivate to exit
+deactivate to exit folder
+
+# install flask
+python -m pip install flask
 
 # remember VSCode from back end
 
+# code . opens folder in VSCode
+
+# from flask import Flask in first file
+
+# app = Flask()  creates an instance of Flask class, name of file goes in ()
+# * Magic Functions double underscore, name, double underscore (__name__)
+# app.run(debug=True)  starts the server (in dev mode)
+# @app.get("/")
+def home():
+    return "some text here"
+
+# remember GET, POST, PUT, PATCH, DELETE (server Functions)
 
 ---- New Project -----
 # initialize the Repo ( 1 time)
@@ -36,3 +51,6 @@ git push
 
 # testing end points
 Thunderclient extension
+
+
+# mock_data = dictionary (list of items)

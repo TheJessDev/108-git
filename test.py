@@ -16,6 +16,7 @@ print(me)
 me["preferred_color"] = "blue/gray"
 print(me)
 
+# combining a string and an integer
 age = me["age"]
 print(name + ":" + str(age))  # cannot add string + integer; use str()
 # this line is not clean, needs string formatting
@@ -35,7 +36,6 @@ del me["age"]
 
 # or
 z = me["age"].pop()
-
 
 
 
