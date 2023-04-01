@@ -103,22 +103,56 @@ def products_by_category(category):
     return json.dumps(filter_category)
 
 
-# create a list
-# travel mock_data with a for loop
-# from the product, get the category
-# if category is equal to the category we recieved
-#   if so, append product to the list
-# at the end of the for loop, return the list
+@app.get("/api/product/lower/<price>")  # price is now a variable -- need to enter a specific dollar amount at end point
+def products_lower_price(price):
+    fixed_price = float(price)   #  changes string to number 
+
+    filter_lower_price = []
+    for product in mock_data:
+        
+        if product["price"] <= fixed_price:
+            filter_lower_price.append(product)
+
+    return json.dumps(filter_lower_price)
+
+
+@app.get("/api/product/greater/<price>")
+def products_greater_price(price):
+    fixed_price = float(price)
+
+    filter_greater_price =[]
+    for product in mock_data:
+
+        if product ["price"] >= fixed_price:
+            filter_greater_price.append(product)
+
+    return json.dumps(filter_greater_price)   # make sure the return is outside of loop
     
 
+# find how to check if a string contains another string in python
+# if term in [product title in lowercase]
+
+@app.get('/api/product/search/<term>')
+def search_product(term):
+
+    search_product =[]
+    for product in mock_data:
+        if term.lower() in product['title'].lower():
+            search_product.append(product)
+
+    return json.dumps(search_product)
 
 
-    
+# mongo    https://www.mongodb.com
 
 
 
 
-    
+
+
+
+
+
 
 
 
