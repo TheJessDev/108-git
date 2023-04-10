@@ -51,7 +51,7 @@ def users():
     for user in people:
         if user ["name"].lower() == name.lower():
             found = True
-            print(f"{user['name']} => {user['age']}")
+            print(f"{user['name']} => {user['age']}") # f means string format vs str() interpolates integer into string...
 
     if not found: 
         print("Error: User not found")

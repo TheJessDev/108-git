@@ -1,7 +1,8 @@
-from flask import Flask
+from flask import Flask, request  # requests posts to db
 import json
 from about import me
 from data import mock_data
+from config import db
 
 app = Flask(__name__) # create an instance of Flask class
 
@@ -31,12 +32,40 @@ def version():
 def about():
     return json.dumps(me)
 
-############
 
-@app.get("/api/catalog") # <---new url for display**
-def get_data():
-    return json.dumps(mock_data)
-# product = dictionary (object)
+
+
+
+@app.get("/api/catalog")
+def get_catalog():
+    cursor = db.products.find({})
+    results = []
+    for prod in cursor:
+        results.append(fix_id(prod))
+
+    return json.dumps(results)
+
+
+def fix_id(record):
+    record["_id"] = str(record["_id"])  # removes the word 'Object'and returns the number value only (parse into string)
+
+    return record
+    
+
+@app.post('/api/catalog')
+def save_product():
+    product = request.get_json()  # get the json payload from the request
+    # product is a dictionary, saves product to DB
+
+    db.products.insert_one(product)  # product is collection name, CASE SENSITIVE
+
+    print("-------------------------")
+    print(product)  # this part goes to Terminal, return goes to ThunderClient
+
+    # always needs a return to confirm everthing is correct
+    return json.dumps(fix_id(product))
+
+
 
 @app.get("/api/product/count")
 def product_count():
@@ -74,38 +103,36 @@ def sum_practice():
 # 4 - add the category to the list
 # 5 - return the list as json
 
-@app.get("/api/categories")
-def cat_list():
+@app.get("/api/categories") # DB 
+def categories():
+    cursor = db.products.find({})
     cats = []
-    for product in mock_data:
-        category = product["category"]
+    for prod in cursor:
+        category = prod["category"]
 
         # if category does not exist inside the list
         if category not in cats:
-            
-
-        
             cats.append(category)
-    return  json.dumps(cats)
+
+    return json.dumps(cats)
 
 
 # @app.get("/api/catalog/...") ---required for every category
 
 @app.get("/api/catalog/<category>")  # category is now a variable
 def products_by_category(category):
+    cursor = db.products.find({"category": category})
+    results = []
+    for prod in cursor:
+        results.append(fix_id(prod))
 
-    filter_category = []
-    for product in mock_data:
-        
-        if product["category"].lower() == category.lower():
-            filter_category.append(product)
+    return json.dumps(results)
 
-    return json.dumps(filter_category)
 
 
 @app.get("/api/product/lower/<price>")  # price is now a variable -- need to enter a specific dollar amount at end point
 def products_lower_price(price):
-    fixed_price = float(price)   #  changes string to number 
+    fixed_price = float(price)   # float changes string to number 
 
     filter_lower_price = []
     for product in mock_data:
@@ -137,7 +164,7 @@ def search_product(term):
 
     search_product =[]
     for product in mock_data:
-        if term.lower() in product['title'].lower():
+        if term.lower() in product['title'].lower():  # when searching, use in vs ==
             search_product.append(product)
 
     return json.dumps(search_product)
@@ -146,12 +173,21 @@ def search_product(term):
 # mongo    https://www.mongodb.com
 
 
+@app.post("/api/coupons")
+def save_coupon():
+    coupon = request.get_json()
+    db.coupons.insert_one(coupon)
 
+    return json.dumps(fix_id(coupon))
 
-
-
-
-
+@app.get("/api/coupons")
+def get_coupons():
+    cursor = db.coupons.find({})
+    results = []
+    for coupon in cursor:
+        results.append(fix_id(coupon))
+    
+    return json.dumps(results)
 
 
 

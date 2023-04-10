@@ -1,0 +1,24 @@
+
+GETTING STARTED FROM SCRATCH:
+
+nodejs: https://nodejs.org/en/download
+
+python: download python
+
+git: download and install git
+
+on the BE project:
+- install virtualenv:  python -m pip install virtualenv
+- create the virtual env: python3 -m venv venv
+- activate venv:
+- install flask:  python -m pip install flask
+
+
+on FE:
+- point the terminal to the folder
+- run: npm install
+
+
+vs code extensions:
+- prettier
+- thunder client
