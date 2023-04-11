@@ -1,10 +1,12 @@
-from flask import Flask, request  # requests posts to db
+from flask import Flask, request, abort  # requests posts to db, abort is for errors
 import json
 from about import me
 from data import mock_data
 from config import db
+from flask_cors import CORS
 
 app = Flask(__name__) # create an instance of Flask class
+CORS(app) # WARNING: disables CORS check
 
 
 #####################
@@ -85,9 +87,10 @@ def dev_info():
 
 
 @app.get("/api/products/total")
-def sum_practice():
+def sum_prices():
+    cursor = db.products.find({})
     total = 0
-    for product in mock_data:
+    for product in cursor:
         price = product["price"]
         total =  total + price
 
@@ -132,26 +135,28 @@ def products_by_category(category):
 
 @app.get("/api/product/lower/<price>")  # price is now a variable -- need to enter a specific dollar amount at end point
 def products_lower_price(price):
+    cursor = db.products.find({})
     fixed_price = float(price)   # float changes string to number 
 
     filter_lower_price = []
-    for product in mock_data:
+    for product in cursor:
         
         if product["price"] <= fixed_price:
-            filter_lower_price.append(product)
+            filter_lower_price.append(fix_id(product))
 
     return json.dumps(filter_lower_price)
 
 
 @app.get("/api/product/greater/<price>")
 def products_greater_price(price):
+    cursor = db.products.find({})
     fixed_price = float(price)
 
     filter_greater_price =[]
-    for product in mock_data:
+    for product in cursor:
 
         if product ["price"] >= fixed_price:
-            filter_greater_price.append(product)
+            filter_greater_price.append(fix_id(product))
 
     return json.dumps(filter_greater_price)   # make sure the return is outside of loop
     
@@ -159,18 +164,32 @@ def products_greater_price(price):
 # find how to check if a string contains another string in python
 # if term in [product title in lowercase]
 
+#@app.get('/api/product/search/<term>')
+#def search_product(term):
+
+    #search_product =[]
+    #for product in mock_data:
+       # if term.lower() in product['title'].lower():  # when searching, use in vs ==
+            #search_product.append(product)
+
+    #return json.dumps(search_product)
+
+
 @app.get('/api/product/search/<term>')
 def search_product(term):
-
-    search_product =[]
-    for product in mock_data:
-        if term.lower() in product['title'].lower():  # when searching, use in vs ==
-            search_product.append(product)
+    
+    cursor = db.product.find({"title":{'$regex' : term, "$optiions": "i"}})
+    search_product = []
+    for prod in cursor:
+        search_product.append(fix_id(prod))
 
     return json.dumps(search_product)
 
-
 # mongo    https://www.mongodb.com
+
+#################################
+####### Coupon Codes ###########
+#################################
 
 
 @app.post("/api/coupons")
@@ -188,6 +207,29 @@ def get_coupons():
         results.append(fix_id(coupon))
     
     return json.dumps(results)
+
+@app.get("/api/coupons/<code>")
+def coupon_code_filter(code):
+    coupon = db.coupons.find_one({"code": code})    # find_one will grab a single item vs cursor that grabs many. 
+    if coupon == None:
+        return abort("Invalid code")
+    
+    return json.dumps(fix_id(coupon))
+    
+
+
+
+
+
+
+# def products_by_category(category):
+   # cursor = db.products.find({"category": category})
+    #results = []
+    #for prod in cursor:
+        #results.append(fix_id(prod))
+
+    #return json.dumps(results)
+
 
 
 
